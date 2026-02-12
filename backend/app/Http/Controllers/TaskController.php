@@ -18,6 +18,7 @@ class TaskController extends Controller
      * 新しいToDoを保存する
      */
     public function store(Request $request)
+    {
 
         // バリデーション（タイトルが空じゃないかチェック）
         $validated = $request->validate([
