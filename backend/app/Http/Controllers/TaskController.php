@@ -1,55 +1,65 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\Task; 
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
+use App\Services\TaskService;
+use App\Models\Task;
+use Illuminate\Http\JsonResponse;
 
+/**
+ * タスクの基本操作（CRUD）を制御するコントローラー
+ */
 class TaskController extends Controller
 {
+    private TaskService $taskService;
+
     /**
-     * ToDo一覧を取得する
+     * @param TaskService $taskService
      */
-    public function index()
+    public function __construct(TaskService $taskService)
     {
-        return Task::orderBy('created_at', 'desc')->get();
+        $this->taskService = $taskService;
     }
 
     /**
-     * 新しいToDoを保存する
+     * タスク一覧を取得
+     * * @return JsonResponse
      */
-    public function store(Request $request)
+    public function index(): JsonResponse
     {
-
-        // バリデーション（タイトルが空じゃないかチェック）
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-        ]);
-
-        $task = Task::create([
-            'title' => $validated['title'],
-            'is_completed' => false,
-        ]);
-
-        return response()->json($task, 201);
+        return $this->taskService->index();
     }
 
     /**
-     * ToDoの状態（完了/未完了）を更新する
+     * 新しいタスクを作成
+     * * @param StoreTaskRequest $request バリデーション済みリクエスト
+     * @return JsonResponse
      */
-    public function update(Request $request, Task $task)
+    public function store(StoreTaskRequest $request): JsonResponse
     {
-        $task->update($request->all());
-
-        return response()->json($task);
+        return $this->taskService->store($request->validated());
     }
 
     /**
-     * ToDoを削除する
+     * タスクを更新
+     * * @param UpdateTaskRequest $request バリデーション済みリクエスト
+     * @param Task $task
+     * @return JsonResponse
      */
-    public function destroy(Task $task)
+    public function update(UpdateTaskRequest $request, Task $task): JsonResponse
     {
-        $task->delete();
+        return $this->taskService->update($request->validated(), $task);
+    }
 
-        return response()->json(['message' => '削除しました']);
+    /**
+     * タスクを削除
+     * * @param Task $task
+     * @return JsonResponse
+     */
+    public function destroy(Task $task): JsonResponse
+    {
+        return $this->taskService->destroy($task);
     }
 }
