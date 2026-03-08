@@ -25,7 +25,7 @@ class TaskController extends Controller
 
     /**
      * タスク一覧を取得
-     * * @return JsonResponse
+     *  @return JsonResponse
      */
     public function index(): JsonResponse
     {
@@ -34,7 +34,7 @@ class TaskController extends Controller
 
     /**
      * 新しいタスクを作成
-     * * @param StoreTaskRequest $request バリデーション済みリクエスト
+     *  @param StoreTaskRequest $request バリデーション済みリクエスト
      * @return JsonResponse
      */
     public function store(StoreTaskRequest $request): JsonResponse
@@ -44,7 +44,7 @@ class TaskController extends Controller
 
     /**
      * タスクを更新
-     * * @param UpdateTaskRequest $request バリデーション済みリクエスト
+     *　@param UpdateTaskRequest $request バリデーション済みリクエスト
      * @param Task $task
      * @return JsonResponse
      */
@@ -55,7 +55,7 @@ class TaskController extends Controller
 
     /**
      * タスクを削除
-     * * @param Task $task
+     * @param Task $task
      * @return JsonResponse
      */
     public function destroy(Task $task): JsonResponse

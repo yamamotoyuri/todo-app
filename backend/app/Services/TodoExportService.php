@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Repositories\TaskRepository;
+use App\Repositories\TodoRepository;
 use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -18,19 +18,19 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class TodoExportService
 {
-    private TaskRepository $repo;
+    private TodoExportRepository $repo;
 
     /**
-     * @param TaskRepository $repo
+     * @param TodoExportRepository $repo
      */
-    public function __construct(TaskRepository $repo)
+    public function __construct(TodoExportRepository $repo)
     {
         $this->repo = $repo;
     }
 
     /**
      * エクスポート処理を実行
-     * * @param string|null $type 'excel' または 'pdf'
+     * @param string|null $type 'excel' または 'pdf'
      * @return array{path: string, name: string} 生成されたファイルの情報
      */
     public function export(?string $type): array
@@ -60,7 +60,7 @@ class TodoExportService
 
     /**
      * Excelファイルを生成
-     * * @param Collection $todos
+     * @param Collection $todos
      * @param string $tmpDir
      * @param string $baseName
      * @return string 作成したExcelのパス
@@ -92,28 +92,33 @@ class TodoExportService
 
     /**
      * Excelのヘッダー（1行目）をセット・装飾
-     * * @param Worksheet $sheet
-     * @return void
+     * @param Worksheet $sheet
+     * @return bool
      */
-    private function setExcelHeader(Worksheet $sheet): void
+    private function setExcelHeader(Worksheet $sheet): bool
     {
-        $sheet->fromArray(['ID', 'タイトル', '完了ステータス'], null, 'A1');
-        
-        $sheet->getStyle('A1:C1')->applyFromArray([
-            'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
-            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '4472C4']],
-            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
-        ]);
+        try {
+            $sheet->fromArray(['ID', 'タイトル', '完了ステータス'], null, 'A1');
+            
+            $sheet->getStyle('A1:C1')->applyFromArray([
+                'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+                'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '4472C4']],
+                'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
+            ]);
+        } catch (\Exception $e) {
+            \Log::error("Excelヘッダー設定失敗: " . $e->getMessage());
+            return false;
+        }
     }
 
     /**
      * 各行にデータをセットし、完了済みの場合は装飾
-     * * @param Worksheet $sheet
+     * @param Worksheet $sheet
      * @param int $row
-     * @param mixed $todo
+     * @param \App\Models\Task $todo
      * @return void
      */
-    private function setExcelRowData(Worksheet $sheet, int $row, $todo): void
+    private function setExcelRowData(Worksheet $sheet, int $row, \App\Models\Task $todo): void
     {
         $sheet->setCellValue('A' . $row, $todo->id);
         $sheet->setCellValue('B' . $row, $todo->title);
@@ -128,7 +133,7 @@ class TodoExportService
 
     /**
      * 全体のスタイル設定（フォント・罫線・幅自動調整）
-     * * @param Worksheet $sheet
+     * @param Worksheet $sheet
      * @param int $lastRow
      * @return void
      */
@@ -147,7 +152,7 @@ class TodoExportService
 
     /**
      * ExcelをPDFに変換
-     * * @param string $excelPath
+     * @param string $excelPath
      * @param string $tmpDir
      * @param string $baseName
      * @return array{path: string, name: string}

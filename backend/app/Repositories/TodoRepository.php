@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 /**
  * データベース操作（Eloquent）を直接担当するクラス
  */
-class TaskRepository
+class TodoRepository
 {
     private Task $model;
 
@@ -19,6 +19,7 @@ class TaskRepository
 
     /**
      * 全件取得
+     * @return Collection
      */
     public function index(): Collection
     {
@@ -27,6 +28,7 @@ class TaskRepository
 
     /**
      * 新規保存
+     * @return Task
      */
     public function store(array $data): Task
     {
@@ -35,6 +37,7 @@ class TaskRepository
 
     /**
      * 更新
+     * @return Task 
      */
     public function update(Task $task, array $data): Task
     {
@@ -44,9 +47,19 @@ class TaskRepository
 
     /**
      * 削除
+     * @return bool
      */
     public function destroy(Task $task): bool
     {
         return $task->delete();
+    }
+
+    /**
+    * タスクを全件取得して配列で返す（エクスポート用）
+    * @return Collection
+    */
+    public function getAllForExport(): Collection
+    {
+        return $this->model->all();
     }
 }

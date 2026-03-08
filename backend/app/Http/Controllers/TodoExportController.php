@@ -23,15 +23,13 @@ class TodoExportController extends Controller
 
     /**
      * エクスポート処理を実行し、ファイルをダウンロードさせる
-     * * @param StoreExportRequest $request バリデーション済みリクエスト
+     * @param StoreExportRequest $request バリデーション済みリクエスト
      * @return BinaryFileResponse
      */
     public function export(StoreExportRequest $request): BinaryFileResponse
     {
         // 1. バリデーション済みの'type'（excel or pdf）のみを抽出
         $type = $request->validated('type');
-        
-
         // 2. Serviceに処理を依頼
         $fileInfo = $this->exportService->export($type);
 
