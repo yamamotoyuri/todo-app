@@ -15,8 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // API通信を許可するための設定
         $middleware->validateCsrfTokens(except: [
             'api/*',
-            'tasks',
-            'tasks/*',
+            'todos',
+            'todos/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Http\Requests\StoreExportRequest;
 use App\Services\TodoExportService;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -11,14 +10,14 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  */
 class TodoExportController extends Controller
 {
-    private TodoExportService $exportService;
+    private TodoExportService $todoExportService;
 
     /**
-     * @param TodoExportService $exportService
+     * @param TodoExportService $todoExportService
      */
-    public function __construct(TodoExportService $exportService)
+    public function __construct(TodoExportService $todoExportService)
     {
-        $this->exportService = $exportService;
+        $this->todoExportService = $todoExportService;
     }
 
     /**

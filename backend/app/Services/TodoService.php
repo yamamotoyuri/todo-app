@@ -3,10 +3,10 @@
 namespace App\Services;
 
 use App\Repositories\TodoRepository;
-use App\Models\Task;
+use App\Models\Todo;
 use Illuminate\Http\JsonResponse;
 
-class TaskService
+class TodoService
 {
     protected $todoRepository;
 
@@ -17,8 +17,8 @@ class TaskService
 
     public function index(): JsonResponse
     {
-        $tasks = $this->todoRepository->index();
-        return response()->json($tasks);
+        $todos = $this->todoRepository->index();
+        return response()->json($todos);
     }
 
     public function store(array $validatedData): JsonResponse
@@ -28,19 +28,19 @@ class TaskService
             'is_completed' => false,
         ];
 
-        $task = $this->todoRepository->store($data);
-        return response()->json($task, 201); 
+        $todo = $this->todoRepository->store($data);
+        return response()->json($todo, 201); 
     }
 
-    public function update(array $validatedData, Task $task): JsonResponse
+    public function update(array $validatedData, Todo $todo): JsonResponse
     {
-        $updatedTask = $this->todoRepository->update($task, $validatedData);
-        return response()->json($updatedTask);
+        $updatedTodo = $this->todoRepository->update($todo, $validatedData);
+        return response()->json($updatedTodo);
     }
   
-    public function destroy(Task $task): JsonResponse
+    public function destroy(Todo $todo): JsonResponse
     {
-        $this->todoRepository->destroy($task);
+        $this->todoRepository->destroy($todo);
         return response()->json(['message' => '削除しました']);
     }
 }

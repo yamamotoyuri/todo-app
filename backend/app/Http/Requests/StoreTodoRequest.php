@@ -4,16 +4,16 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateTaskRequest extends FormRequest
+class StoreTodoRequest extends FormRequest
 {
     /**
      * 権限チェック（今回は常に許可）
      * @return bool
-     */    
+     */
     public function authorize(): bool
     {
         return true;
-    }   
+    }
 
 
     /**
@@ -23,8 +23,7 @@ class UpdateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'        => 'sometimes|string|max:255',
-            'is_completed' => 'sometimes|boolean',
+            'title' => 'required|string|max:255',
         ];
     }
 }

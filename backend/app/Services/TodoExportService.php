@@ -18,14 +18,14 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class TodoExportService
 {
-    private TodoExportRepository $repo;
+    private TodoRepository $todoRepository;
 
     /**
-     * @param TodoExportRepository $repo
+     * @param TodoRepository $todoRepository
      */
-    public function __construct(TodoExportRepository $repo)
+    public function __construct(TodoRepository $todoRepository)
     {
-        $this->repo = $repo;
+        $this->todoRepository = $todoRepository;
     }
 
     /**
@@ -42,7 +42,7 @@ class TodoExportService
         File::ensureDirectoryExists($tmpDir);
 
         // 1. Repositoryからデータを取得
-        $todos = $this->repo->getAllForExport();
+        $todos = $this->todoRepository->getAllForExport();
 
         // 2. Excelファイルを作成
         $excelPath = $this->createExcel($todos, $tmpDir, $baseName);
@@ -69,7 +69,7 @@ class TodoExportService
     {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Task List');
+        $sheet->setTitle('Todo List');
 
         // ヘッダー作成
         $this->setExcelHeader($sheet);
@@ -105,6 +105,7 @@ class TodoExportService
                 'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '4472C4']],
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
             ]);
+            return true;
         } catch (\Exception $e) {
             \Log::error("Excelヘッダー設定失敗: " . $e->getMessage());
             return false;
@@ -115,10 +116,10 @@ class TodoExportService
      * 各行にデータをセットし、完了済みの場合は装飾
      * @param Worksheet $sheet
      * @param int $row
-     * @param \App\Models\Task $todo
+     * @param \App\Models\Todo $todo
      * @return void
      */
-    private function setExcelRowData(Worksheet $sheet, int $row, \App\Models\Task $todo): void
+    private function setExcelRowData(Worksheet $sheet, int $row, \App\Models\Todo $todo): void
     {
         $sheet->setCellValue('A' . $row, $todo->id);
         $sheet->setCellValue('B' . $row, $todo->title);

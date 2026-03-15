@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\Task;
+use App\Models\Todo;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class TodoRepository
 {
-    private Task $model;
+    private Todo $model;
 
-    public function __construct(Task $model)
+    public function __construct(Todo $model)
     {
         $this->model = $model;
     }
@@ -28,30 +28,30 @@ class TodoRepository
 
     /**
      * 新規保存
-     * @return Task
+     * @return Todo
      */
-    public function store(array $data): Task
+    public function store(array $data): Todo
     {
         return $this->model->create($data);
     }
 
     /**
      * 更新
-     * @return Task 
+     * @return Todo
      */
-    public function update(Task $task, array $data): Task
+    public function update(Todo $todo, array $data): Todo
     {
-        $task->update($data);
-        return $task;
+        $todo->update($data);
+        return $todo;
     }
 
     /**
      * 削除
      * @return bool
      */
-    public function destroy(Task $task): bool
+    public function destroy(Todo $todo): bool
     {
-        return $task->delete();
+        return $todo->delete();
     }
 
     /**

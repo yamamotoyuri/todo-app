@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * エクスポート時のバリデーションを担当
  */
-class ExportTaskRequest extends FormRequest
+class ExportTodoRequest extends FormRequest
 {
     /**
      * 権限チェック（今回は常に許可）
