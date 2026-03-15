@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\TodoRepository;
+use App\Models\Todo;
 use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -116,10 +117,10 @@ class TodoExportService
      * 各行にデータをセットし、完了済みの場合は装飾
      * @param Worksheet $sheet
      * @param int $row
-     * @param \App\Models\Todo $todo
+     * @param Todo $todo
      * @return void
      */
-    private function setExcelRowData(Worksheet $sheet, int $row, \App\Models\Todo $todo): void
+    private function setExcelRowData(Worksheet $sheet, int $row, Todo $todo): void
     {
         $sheet->setCellValue('A' . $row, $todo->id);
         $sheet->setCellValue('B' . $row, $todo->title);

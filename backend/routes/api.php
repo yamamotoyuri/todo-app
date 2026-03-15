@@ -11,4 +11,4 @@ Route::put('todos/{todo}', [TodoController::class, 'update']); // 更新(完了/
 Route::delete('todos/{todo}', [TodoController::class, 'destroy']); // 削除
 
 // --- Export ---
-Route::get('/todos/export', [TodoExportController::class, 'export']); // Excel/PDF出力
+Route::get('/todo/export', [TodoExportController::class, 'export']); // Excel/PDF出力
