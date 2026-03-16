@@ -8,22 +8,26 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
     public function up(): void
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('todos', function (Blueprint $table) {
             $table->id();
-            $table->string('title');                          // ToDoの内容を保存する場所
-            $table->boolean('is_completed')->default(false);  // 完了フラグ（最初は未完了なのでfalse）
+            $table->string('title');
+            $table->boolean('is_completed')->default(false);
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('todos');
     }
 };

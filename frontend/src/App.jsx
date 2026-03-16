@@ -2,32 +2,32 @@ import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
-  const [tasks, setTasks] = useState([])
+  const [todos, setTodos] = useState([])
   const [newTitle, setNewTitle] = useState("")
 
   const API_BASE_URL = 'http://localhost:8080/api';
 
-  const fetchTasks = async () => {
+  const fetchTodos = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/tasks`, {
+      const response = await fetch(`${API_BASE_URL}/todos`, {
         headers: { 'Accept': 'application/json' }
       })
       if (!response.ok) throw new Error('fetch error')
       const data = await response.json()
-      setTasks(data)
+      setTodos(data)
     } catch (e) {
       console.error('データ取得失敗', e)
     }
   }
 
   useEffect(() => {
-    fetchTasks()
+    fetchTodos()
   }, [])
 
-  const addTask = async () => {
+  const addTodo = async () => {
     if (!newTitle) return
     try {
-      const response = await fetch(`${API_BASE_URL}/tasks`, {
+      const response = await fetch(`${API_BASE_URL}/todos`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -37,37 +37,37 @@ function App() {
       })
       if (!response.ok) throw new Error('add error')
       setNewTitle("")
-      fetchTasks()
+      fetchTodos()
     } catch (e) {
       console.error('追加失敗', e)
     }
   }
 
-  const deleteTask = async (task) => {
+  const deleteTodo = async (Todo) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/tasks/${task.id}`, {
+      const response = await fetch(`${API_BASE_URL}/todos/${Todo.id}`, {
         method: 'DELETE',
         headers: { 'Accept': 'application/json' }
       })
       if (!response.ok) throw new Error('delete error')
-      fetchTasks()
+      fetchTodos()
     } catch (e) {
       console.error('削除失敗', e)
     }
   }
 
-  const toggleComplete = async (task) => {
+  const toggleComplete = async (Todo) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/tasks/${task.id}`, {
+      const response = await fetch(`${API_BASE_URL}/todos/${Todo.id}`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
           'Accept': 'application/json' 
         },
-        body: JSON.stringify({ is_completed: !task.is_completed }),
+        body: JSON.stringify({ is_completed: !Todo.is_completed }),
       })
       if (!response.ok) throw new Error('update error')
-      fetchTasks()
+      fetchTodos()
     } catch (e) {
       console.error('更新失敗', e)
     }
@@ -94,7 +94,7 @@ function App() {
           placeholder="タスクを入力"
           style={{ flex: 1, padding: '8px' }}
         />
-        <button onClick={addTask}>Add</button>
+        <button onClick={addTodo}>Add</button>
       </div>
 
       <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
@@ -103,24 +103,24 @@ function App() {
       </div>
 
       <ul style={{ listStyle: 'none', padding: 0 }}>
-        {tasks.map(task => (
-          <li key={task.id} style={{ display: 'flex', alignItems: 'center', padding: '10px', borderBottom: '1px solid #eee' }}>
+        {todos.map(Todo => (
+          <li key={Todo.id} style={{ display: 'flex', alignItems: 'center', padding: '10px', borderBottom: '1px solid #eee' }}>
             <input
               type="checkbox"
-              checked={!!task.is_completed} // booleanに変換
-              onChange={() => toggleComplete(task)}
+              checked={!!Todo.is_completed} // booleanに変換
+              onChange={() => toggleComplete(Todo)}
               style={{ marginRight: '10px' }}
             />
-            <span style={{ flex: 1, textDecoration: task.is_completed ? 'line-through' : 'none', color: task.is_completed ? '#888' : '#000' }}>
-              {task.title}
+            <span style={{ flex: 1, textDecoration: Todo.is_completed ? 'line-through' : 'none', color: Todo.is_completed ? '#888' : '#000' }}>
+              {Todo.title}
             </span>
             <button
-              onClick={() => deleteTask(task)}
-              disabled={!task.is_completed}
+              onClick={() => deleteTodo(Todo)}
+              disabled={!Todo.is_completed}
               style={{
-                backgroundColor: task.is_completed ? '#ff4d4f' : '#ccc',
+                backgroundColor: Todo.is_completed ? '#ff4d4f' : '#ccc',
                 color: 'white', border: 'none', borderRadius: '4px', padding: '5px 10px',
-                cursor: task.is_completed ? 'pointer' : 'not-allowed'
+                cursor: Todo.is_completed ? 'pointer' : 'not-allowed'
               }}
             >
               Delete
