@@ -10,11 +10,11 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class TodoRepository
 {
-    private Todo $model;
+    private Todo $todoModel;
 
-    public function __construct(Todo $model)
+    public function __construct(Todo $todoModel)
     {
-        $this->model = $model;
+        $this->todoModel = $todoModel;
     }
 
     /**
@@ -23,25 +23,25 @@ class TodoRepository
      */
     public function index(): Collection
     {
-        return $this->model->all();
+        return $this->todoModel->all();
     }
 
     /**
      * 新規保存
      * @return Todo
      */
-    public function store(array $data): Todo
+    public function store(array $todoData): Todo
     {
-        return $this->model->create($data);
+        return $this->todoModel->create($todoData);
     }
 
     /**
      * 更新
      * @return Todo
      */
-    public function update(Todo $todo, array $data): Todo
+    public function update(Todo $todo, array $todoData): Todo
     {
-        $todo->update($data);
+        $todo->update($todoData);
         return $todo;
     }
 
@@ -60,6 +60,6 @@ class TodoRepository
     */
     public function getAllForExport(): Collection
     {
-        return $this->model->all();
+        return $this->todoModel->all();
     }
 }
